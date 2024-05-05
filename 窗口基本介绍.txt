@@ -1,0 +1,74 @@
+一、main.cpp文件介绍
+#include "mywidget.h"
+
+#include <QApplication>//包含一个应用程序的类的头文件
+#include <QLocale>
+#include <QTranslator>
+
+//main程序入口 argc命令行变量数量，argv命令行变量数组
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);//a是一个应用程序对象，接受上述命令
+    //在qt中有且仅有一个上述应用程序对象
+
+    QTranslator translator;
+    const QStringList uiLanguages = QLocale::system().uiLanguages();
+    for (const QString &locale : uiLanguages) {
+        const QString baseName = "study_ver01_" + QLocale(locale).name();
+        if (translator.load(":/i18n/" + baseName)) {
+            a.installTranslator(&translator);
+            break;
+        }
+    }
+    myWidget w;//实例化窗口对象，其父类QWidget
+    w.show();//窗口对象默认不会显示，必须调用show显示
+    return a.exec();//让应用程序对象进入消息循环机制，（点击×窗口break掉）
+}
+二、pro文件内容介绍
+QT       += core gui       //qt包含的模块
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets         //ver4以上包含widgets
+SOURCES += \    //源文件
+    main.cpp \
+    mywidget.cpp
+
+HEADERS += \    //头文件
+    mywidget.h
+三、.h文件介绍
+#ifndef MYWIDGET_H
+#define MYWIDGET_H
+
+#include <QWidget>//包含窗口类qwidget
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class myWidget;
+}
+QT_END_NAMESPACE
+
+class myWidget : public QWidget
+{
+    Q_OBJECT  //宏，允许类中使用信号和槽的机制
+
+public:
+    myWidget(QWidget *parent = nullptr); //构造函数
+    ~myWidget();
+
+private:
+    Ui::myWidget *ui;
+};
+#endif // MYWIDGET_H
+四、命名规范和快捷键
+命名规范 
+类名 首字母大写，单词和单词之间首字母大写
+函数名 变量名称、首字母小写，单词和单词之间首字母大写
+快捷键
+注释掉几行 ctrl + /
+运行 ctrl+r
+编译 ctrl+b
+字体缩放 ctrl+滚鼠标
+查找 ctrl+f
+整行移动 ctrl+shift + ↑或者↓
+帮助文档 F1
+自动对齐 ctrl+i
+同名之间.h和.cpp切换 F4
+五、创建QPushButton
