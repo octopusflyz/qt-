@@ -1,0 +1,87 @@
+一、创建一个按钮
+#include "mywidget.h"
+#include "ui_mywidget.h"
+#include<QPushButton>//按钮控件头文件
+
+myWidget::myWidget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::myWidget)
+{
+    ui->setupUi(this);
+    //创建一个按钮
+    QPushButton *btn=new QPushButton;
+    //btn->show();//show以顶层方式弹出窗口控件
+    //让btn依附在mywidget窗口上
+    btn->setParent(this);//设置父亲，故窗口释放时，会把所有子类释放
+
+    //显示文本
+    btn->setText("button");
+
+    //创建第二个按钮,按照控件大小创建窗口
+    QPushButton *btn2=new QPushButton("开始游戏",this);
+
+    //移动btn2按钮
+    btn2->move(200,300);//传入左上角顶点坐标
+
+    //设置按钮大小
+    btn2->resize(200,50);//继承widget中resize函数
+
+    //重置窗口大小
+    resize(600,400);//传入宽和高
+
+    //设置固定窗口大小，用户不可以改
+    setFixedSize(600,400);
+
+    //设置窗口标题
+    setWindowTitle("first window");
+
+
+
+}
+
+myWidget::~myWidget()
+{
+    delete ui;
+}
+
+
+二、创建一个子类对象 07
+头文件
+#ifndef MYPUSHBUTTON_H
+#define MYPUSHBUTTON_H
+
+#include <QPushButton>>
+
+class myPushButton : public QPushButton//继承自父类QPushButton
+{
+    Q_OBJECT
+public:
+    explicit myPushButton(QWidget *parent = nullptr);
+    ~myPushButton();//析构自己写
+
+signals:
+};
+
+#endif // MYPUSHBUTTON_H
+
+.cpp文件
+#include "mypushbutton.h"
+#include <QDebug>
+myPushButton::myPushButton(QWidget *parent)
+    : QPushButton{parent}
+{
+    qDebug()<<"button构造调用";//输出调试信息
+    }
+myPushButton::~myPushButton(){
+    qDebug()<<"button析构调用";
+}
+
+父类cpp文件中
+#include "mypushbutton.h"
+//创建一个自己的按钮对象
+    myPushButton *mybtn=new myPushButton;
+    mybtn->setParent(this); 注意setparent
+    mybtn->setText("mine button");
+    mybtn->move(200,0);
+
+}
