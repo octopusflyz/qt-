@@ -71,4 +71,6 @@ private:
 帮助文档 F1
 自动对齐 ctrl+i
 同名之间.h和.cpp切换 F4
-五、创建QPushButton
+五、添加一个新文件
+右键最顶层文件，添加新文件，选择新的class/source/header
+class:确认该类对应父类
