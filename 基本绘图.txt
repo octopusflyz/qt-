@@ -1,0 +1,51 @@
+一、绘图事件
+#include<QPainter>
+void AWidget::paintEvent(QPaintEvent *event){//自动调用绘图事件
+    //实例化画家对象，this指定的是绘图设备，当前widget
+    QPainter painter(this);
+
+    //设置画笔
+    QPen pen(QColor(112,146,190));//先设置画笔再画
+    //设置笔迹形状
+    pen.setCapStyle(Qt::RoundCap);
+    //设置画笔宽度
+    pen.setWidth(5);
+    //设置画笔
+    //pen.setStyle(Qt::DotLine);
+
+    //设置画刷(填充，在使用画笔前
+    QBrush brush(Qt::lightGray);
+    //设置画刷风格
+     brush.setStyle(Qt::CrossPattern);
+    //让画家使用画刷
+    painter.setBrush(brush);
+
+    //让画家使用画笔
+        painter.setPen(pen);
+    //画线
+    painter.drawLine(QPoint(0,0),QPoint(100,100));
+    //画椭圆
+    painter.drawEllipse(QPoint(100,100),50,50);//后两个rx，ry
+    //画矩形
+    painter.drawRect(QRect(20,20,50,50));
+    //画文字
+    painter.drawText(QRect(10,200,100,50),"好好学习");//前面是文字的占的位置
+
+
+}
+
+二、利用画家，插入图片
+void AWidget::paintEvent(QPaintEvent *event){//自动调用绘图事件
+    //实例化画家对象，this指定的是绘图设备，当前widget
+    QPainter painter(this);
+
+QRect rec1(posx,posy,120,160);//限定范围
+//利用画家，画资源图片
+    painter.drawPixmap(rec1,QPixmap(":/creature.png"));
+}
+
+Awidget构造中
+    //点击移动按钮，移动图片
+    connect(ui->pushButton,&QPushButton::clicked,[=](){
+        //如果手动调用绘图事件，用绘图更新
+        //update();
