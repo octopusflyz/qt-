@@ -1,0 +1,139 @@
+一、信号和槽（点击按钮关闭窗口）
+
+在miWidget类构造函数下
+
+//需求，点击我自己的按钮，关闭窗口09
+//信号：connect(信号发送者，发送的具体信号(函数地址），信号接收者，信号的处理（槽函数）)
+//信号槽优点，松散耦合，信号发送端和接收端本身没有关联，通过connect连接将两端耦合
+//信号signals 槽slots
+    //connect(mybtn,&QPushButton::clicked,this,&myWidget::close);
+    //connect(mybtn,&myPushButton::clicked,this,&QWidget::close);//地址可以写父类
+
+
+二、自定义的信号和槽
+
+//自定义的信号和槽
+    //Teacher 类 老师类
+    //Student 类 学生类
+    //下课后，老师触发一个信号，饿了，学生响应信号，请客吃饭
+
+    //创建老师，学生对象
+    this->tc=new Teacher(this);
+    this->st=new Student(this);
+
+    connect(tc,&Teacher::hungry,st,&Student::treat);
+    //调用下课函数
+    classisover();
+    //先连接再触发事件
+
+}
+
+/***/触发饿了函数
+void myWidget:: classisover(){
+    //下课函数，调用后，触发老师饿了信号
+    //emit 表面要发布的信号
+    emit tc->hungry();
+}
+
+
+/***/老师类
+①.h
+class Teacher : public QObject
+{
+    Q_OBJECT
+public:
+    explicit Teacher(QObject *parent = nullptr);
+
+signals:
+    //自定义信号写在signal下面
+    //返回值是void，只需要声明，不需要实现
+    //可以有参数，可以重载
+    void hungry();
+};
+
+②.cpp
+#include "teacher.h"
+
+Teacher::Teacher(QObject *parent)
+    : QObject{parent}
+{}
+
+
+/***/学生类
+①.h
+#ifndef STUDENT_H
+#define STUDENT_H
+
+#include <QObject>
+
+class Student : public QObject
+{
+    Q_OBJECT
+public:
+    explicit Student(QObject *parent = nullptr);
+ //槽函数直接写在public下或者全局下
+ //返回值是void，需要声明，也需要实现
+ //可以有参数，可以重载
+    void treat();
+
+signals:
+};
+②.cpp
+#include "student.h"
+#include<QDebug>
+
+Student::Student(QObject *parent)
+    : QObject{parent}
+{}
+
+void Student::treat(){
+    qDebug()<<"请老师吃饭";
+}
+
+三、信号和槽函数 重载
+
+//connect(tc,&Teacher::hungry,st,&Student::treat);
+    //当有重载时，这个hungry不知道指向哪一个函数，需要声明函数指针
+    //调用下课函数
+   // classisover();
+    //先连接再触发事件
+
+    //连接重载后带参数的 信号和槽
+    //指针指向地址
+    //用函数指针指向函数地址
+    void(Teacher::*teacherSignal)(QString)=&Teacher::hungry;//函数指针指向Teacher作用域下的成员函数
+    void(Student::*studentSignal)(QString)=&Student::treat;//是指向有参的那个
+    connect(tc,teacherSignal,st,studentSignal);
+    classisover();
+
+void myWidget:: classisover(){
+    //下课函数，调用后，触发老师饿了信号
+    //emit 表面要发布的信号
+    emit tc->hungry();
+    emit tc->hungry("宫保鸡丁");
+}
+
+/***/teacher
+void hungry(QString foodName);
+
+/***/student
+void treat(QString foodName);
+void Student::treat(QString foodName){
+    //qDebug()<<"请老师吃饭,老师要吃"<<foodName;
+    //QString转成char*，打印不会有“”；
+    qDebug()<<"请老师吃饭,老师要吃"<<foodName.toUtf8().data();
+    //先转QByteArray，再转char*
+}
+
+四、信号连接信号
+//无参信号和槽连接
+    void(Teacher::*teacherSignal2)(void)=&Teacher::hungry;//函数指针指向Teacher作用域下的成员函数
+    void(Student::*studentSlot2)(void)=&Student::treat;//是指向有参的那个
+    connect(tc,teacherSignal2,st,studentSlot2);
+    //点击按钮，触发信号，信号连接信号
+     connect(btn,&QPushButton::clicked,tc,teacherSignal2);
+//（clicked->teachersignal2->studentslot2
+
+五、断开信号
+     //断开信号
+     disconnect(btn,&QPushButton::clicked,tc,teacherSignal2);
