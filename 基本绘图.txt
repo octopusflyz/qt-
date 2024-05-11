@@ -40,6 +40,9 @@ void AWidget::paintEvent(QPaintEvent *event){//自动调用绘图事件
     QPainter painter(this);
 
 QRect rec1(posx,posy,120,160);//限定范围
+!!注意先要添加资源文件
+//添加新文件-Qt Resource File
+//资源图片-open in editor-添加前缀-添加文件选中图片
 //利用画家，画资源图片
     painter.drawPixmap(rec1,QPixmap(":/creature.png"));
 }
