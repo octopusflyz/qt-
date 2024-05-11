@@ -1,0 +1,36 @@
+一、定时器（数字随时间变化）
+#include<QTime>
+void AWidget::timerEvent(QTimerEvent *ev){//传入timerid的参数
+    if(ev->timerId()==id1){
+    static int num=1;//全局变量，不重新回1
+    ui->label1->setText(QString::number(num++));//每隔一秒变
+    }
+    if(ev->timerId()==id2){
+    static int num2=1;
+     ui->label2->setText(QString::number(num2++));//每隔一秒变
+    }
+}
+
+//其中在界面ui文件中插入label1和label2
+
+在AWidget构造函数中
+//启动定时器
+    id1=startTimer(1000);//参数1 间隔，单位毫秒
+    id2=startTimer(2000);//返回的是timerid
+
+二、利用定时器的类
+#include<QTimer>//定时器的类
+
+   //定时器第二种方式
+    QTimer * timer=new QTimer(this);
+    //启动定时器
+    timer->start(500);//参数间隔时间，单位毫秒
+    connect(timer,&QTimer::timeout,[=](){//timer每隔间隔时间发送timeout信号
+        static int num=1;
+        ui->label3->setText(QString::number(num++));
+    });
+
+    //点击按钮，停止定时器
+    connect(ui->pushButton_2,&QPushButton::clicked,[=](){
+        timer->stop();
+    });
