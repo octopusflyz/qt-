@@ -38,7 +38,16 @@ void AWidget::paintEvent(QPaintEvent *event){//自动调用绘图事件
 void AWidget::paintEvent(QPaintEvent *event){//自动调用绘图事件
     //实例化画家对象，this指定的是绘图设备，当前widget
     QPainter painter(this);
-
+ //移动
+    QRect rec1(posx,posy,120,160);
+    //控制在屏幕内
+    if(posx<this->width()){
+        posx+=20;
+    }
+    else if(posx>0){
+        posx=0;
+    }
+   
 QRect rec1(posx,posy,120,160);//限定范围
 !!注意先要添加资源文件
 //添加新文件-Qt Resource File
@@ -51,4 +60,4 @@ Awidget构造中
     //点击移动按钮，移动图片
     connect(ui->pushButton,&QPushButton::clicked,[=](){
         //如果手动调用绘图事件，用绘图更新
-        //update();
+        //update();}
