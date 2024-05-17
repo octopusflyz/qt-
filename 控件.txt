@@ -1,0 +1,17 @@
+一、控件
+1、push button
+添加资源文件后，icon-右侧框点击箭头-选择资源，在button中显示图片（要先build一下）
+2、tool button
+显示图片
+qbuttonstyle-toolbuttonstyle 可以选择只显示图片，显示图片加文字，透明
+3、radio button 单选按钮
+用container中group box，框定若干个选项为一个组
+设置默认值
+
+二、stacked widget
+实现切换页面
+1、添加新文件-qt设计类界面
+2、在ui里将页面提升为于1中同名的类
+3、  connect(ui->welcomeButton,&QPushButton::clicked,this,[=](){
+        ui->stackedWidget->setCurrentIndex(0);
+    });
